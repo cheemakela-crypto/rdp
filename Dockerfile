@@ -1,4 +1,4 @@
-# Ubuntu 22.04 use kar rahe hain jo stable aur latest tools support karta hai
+# Ubuntu 22.04 base image
 FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Wine 32-bit ke liye architecture add karna
 RUN dpkg --add-architecture i386
 
-# XFCE4 ki jagah LXDE aur Firefox ki jagah Midori browser (lightweight) install kar rahe hain
+# Packages install karna (midori ko remove kar diya gaya hai)
 RUN apt update && apt install -y \
     software-properties-common \
     xrdp \
@@ -24,8 +24,7 @@ RUN apt update && apt install -y \
     pulseaudio \
     pulseaudio-utils \
     wine \
-    wine32 \
-    midori && \
+    wine32 && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
 # Root password set karna
