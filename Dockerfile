@@ -1,13 +1,12 @@
-# Base image ko Debian se Ubuntu latest mein update kar diya gaya hai
+# Base image Ubuntu latest
 FROM ubuntu:latest 
 
-# Installation ke doran aane wale prompts ko rokne ke liye
 ENV DEBIAN_FRONTEND=noninteractive 
 
 # Wine 32-bit ke liye architecture add karna
 RUN dpkg --add-architecture i386 
 
-# Packages install karna (firefox-esr ki jagah ubuntu ka default firefox aur zaroori dependencies add ki hain)
+# Packages install karna (policykit-1 ki jagah polkitd aur pkexec add kiya hai)
 RUN apt update && apt install -y \
     software-properties-common \
     xrdp \
@@ -20,15 +19,14 @@ RUN apt update && apt install -y \
     wget \
     nano \
     net-tools \
-    policykit-1 \
+    polkitd \
+    pkexec \
     pulseaudio \
     pulseaudio-utils \
     wine \
     wine32 \
     firefox && \
-    apt clean && rm -rf /var/lib/apt/lists/* 
-
-# Root password set karna (root:root)
+    apt clean && rm -rf /var/lib/apt/lists/* # Root password set karna (root:root)
 RUN echo "root:root" | chpasswd 
 
 # X11 aur session files ki configuration
