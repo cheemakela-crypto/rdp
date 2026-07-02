@@ -27,6 +27,11 @@ RUN apt update && apt install -y \
     wine32 && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
+# --- NGROK INSTALLATION ADD KI GAYI HAI ---
+RUN curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc > /etc/apt/trusted.gpg.d/ngrok.asc && \
+    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" > /etc/apt/sources.list.d/ngrok.list && \
+    apt update && apt install -y ngrok
+
 # Root password set karna
 RUN echo "root:root" | chpasswd
 
@@ -53,5 +58,7 @@ RUN chmod +x /start.sh
 
 # Port 3389 expose karein
 EXPOSE 3389
+# Mobile App connect karne ke liye extra port (Railway TCP proxy ke liye)
+EXPOSE 5000
 
 CMD ["/start.sh"]
