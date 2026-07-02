@@ -1,12 +1,12 @@
-# Ubuntu 22.04 base image
-FROM ubuntu:22.04
+# Debian 12 (Bookworm) Slim image - Sab se halki base image
+FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Wine 32-bit ke liye architecture add karna
 RUN dpkg --add-architecture i386
 
-# Packages install karna
+# Packages install karna (NetSurf browser use kiya gaya hai low RAM ke liye)
 RUN apt update && apt install -y \
     software-properties-common \
     xrdp \
@@ -24,22 +24,23 @@ RUN apt update && apt install -y \
     pulseaudio \
     pulseaudio-utils \
     wine \
-    wine32 && \
+    wine32 \
+    netsurf-gtk && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
-# --- BORE INSTALLATION (Ngrok ki jagah) ---
+# Bore Tunnel install karna (RDP ke liye)
 RUN wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && \
     tar -xf bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && \
     mv bore /usr/local/bin/ && \
     rm bore-*.tar.gz
 
-# Root password set karna
+# Root password set karna (root:root)
 RUN echo "root:root" | chpasswd
 
-# X11 permissions
+# X11 permissions configure karna
 RUN sed -i 's/^allowed_users=.*/allowed_users=anybody/' /etc/X11/Xwrapper.config || echo "allowed_users=anybody" >> /etc/X11/Xwrapper.config
 
-# XRDP ko batana ke XFCE ki badle LXDE start karna hai
+# XRDP ko batana ke LXDE start karna hai
 RUN echo "lxsession -s LXDE -e LXDE" > /root/.xsession && chmod 700 /root/.xsession
 
 # DBUS machine-id generate karna
@@ -57,7 +58,7 @@ RUN adduser xrdp ssl-cert
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Port 3389 expose karein (RDP)
+# Port 3389 expose karein (Bore RDP ke liye)
 EXPOSE 3389
 # Mobile App connect karne ke liye extra port (Railway TCP proxy ke liye)
 EXPOSE 5000
