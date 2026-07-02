@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Wine 32-bit ke liye architecture add karna
 RUN dpkg --add-architecture i386
 
-# Packages install karna (midori ko remove kar diya gaya hai)
+# Packages install karna
 RUN apt update && apt install -y \
     software-properties-common \
     xrdp \
@@ -27,10 +27,11 @@ RUN apt update && apt install -y \
     wine32 && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
-# --- NGROK INSTALLATION ADD KI GAYI HAI ---
-RUN curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc > /etc/apt/trusted.gpg.d/ngrok.asc && \
-    echo "deb https://ngrok-agent.s3.amazonaws.com buster main" > /etc/apt/sources.list.d/ngrok.list && \
-    apt update && apt install -y ngrok
+# --- BORE INSTALLATION (Ngrok ki jagah) ---
+RUN wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && \
+    tar -xf bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && \
+    mv bore /usr/local/bin/ && \
+    rm bore-*.tar.gz
 
 # Root password set karna
 RUN echo "root:root" | chpasswd
@@ -56,7 +57,7 @@ RUN adduser xrdp ssl-cert
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Port 3389 expose karein
+# Port 3389 expose karein (RDP)
 EXPOSE 3389
 # Mobile App connect karne ke liye extra port (Railway TCP proxy ke liye)
 EXPOSE 5000
