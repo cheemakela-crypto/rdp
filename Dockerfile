@@ -1,4 +1,4 @@
-# Debian 12 (Bookworm) Slim image - Sab se halki base image
+# Debian 12 (Bookworm) Slim image
 FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Wine 32-bit ke liye architecture add karna
 RUN dpkg --add-architecture i386
 
-# Packages install karna (NetSurf browser use kiya gaya hai low RAM ke liye)
+# Packages install karna (NetSurf browser ke sath)
 RUN apt update && apt install -y \
     software-properties-common \
     xrdp \
@@ -28,7 +28,7 @@ RUN apt update && apt install -y \
     netsurf-gtk && \
     apt clean && rm -rf /var/lib/apt/lists/*
 
-# Bore Tunnel install karna (RDP ke liye)
+# Bore Tunnel install karna
 RUN wget https://github.com/ekzhang/bore/releases/download/v0.5.1/bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && \
     tar -xf bore-v0.5.1-x86_64-unknown-linux-musl.tar.gz && \
     mv bore /usr/local/bin/ && \
@@ -58,9 +58,9 @@ RUN adduser xrdp ssl-cert
 COPY start.sh /start.sh
 RUN chmod +x /start.sh
 
-# Port 3389 expose karein (Bore RDP ke liye)
+# Port 3389 expose karein (Ab yeh Railway TCP Proxy ke liye use hogi)
 EXPOSE 3389
-# Mobile App connect karne ke liye extra port (Railway TCP proxy ke liye)
+# Mobile App connect karne ke liye extra port (Bore Tunnel ke liye)
 EXPOSE 5000
 
 CMD ["/start.sh"]
