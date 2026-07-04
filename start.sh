@@ -12,9 +12,9 @@ service xrdp start
 mkdir -p /tmp/.X11-unix
 chmod 1777 /tmp/.X11-unix
 
-# Bore Tunnel start karna (Port 3389 ko internet par open karne ke liye)
-echo "Starting Bore Tunnel for RDP (Port 3389)..."
-bore local 3389 --to bore.pub > /var/log/bore.log 2>&1 &
+# Bore Tunnel start karna (Main App ki Port 5000 ke liye)
+echo "Starting Bore Tunnel for Main App (Port 5000)..."
+bore local 5000 --to bore.pub > /var/log/bore.log 2>&1 &
 
 # Thora intezar karke link print karna taake logs mein mil jaye
 sleep 3
